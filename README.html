@@ -1,0 +1,675 @@
+<html>
+  <head>
+    <title>&#129680; Mezey GNU/Linux for Raspberry PI 4 (ARM64)</title>
+    <style>
+      body {
+        font-family: 'Times New Roman', Times, serif;
+      }
+
+      strong {
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+      }
+
+      code {
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        background-color: lemonchiffon;
+      }
+
+      li.indent2 {
+        margin-left: 10px;
+      }
+
+      li.indent3 {
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <a name="top"></a>
+    <h1>&#129680; Mezey GNU/Linux</h1>
+    <h4>&gt;&gt;&gt;&nbsp;For Raspberry PI 4 (ARM64)</h4>
+
+    <p>
+      Author: Andrew Schools <br />
+      Date of Publication: Feb 27th, 2021 <br />
+      Date of Modification: Feb 27th, 2021
+    </p>
+
+    <p>
+      Mailing lists:
+      <a href="mailto:mezey-help@italktocomputers.com">mezey-help@italktocomputers.com</a> |
+      <a href="mailto:Mmzey-news@italktocomputers.com">mezey-news@italktocomputers.com</a> |
+      <a href="mailto:mezey-security@italktocomputers.com">mezey-security@italktocomputers.com</a>
+    </p>
+
+    <h2>Index</h2>
+    <ul>
+      <li>
+        <a href="#intro">Intro</a>
+      </li>
+      <li>
+        <a href="#why">Why Mezey GNU/Linux</a>
+      </li>
+      <li>
+        <a href="#install">Install guide</a>
+      </li>
+      <li class="indent2">
+        <a href="#build_deps">Build Computer Dependencies</a>
+      </li>
+      <li class="indent2">
+        <a href="#clean">Clean Environment</a>
+      </li>
+      <li class="indent2">
+        <a href="#global">Global variables</a>
+      </li>
+      <li class="indent2">
+        <a href="#partition">Partition a new hard drive</a>
+      </li>
+      <li class="indent2">
+        <a href="#mount">Mount new partition</a>
+      </li>
+      <li class="indent2">
+        <a href="#directory_tree">Mezey directory tree</a>
+      </li>
+      <li class="indent2">
+        <a href="#linux_headers">Get the Linux Kernel headers</a>
+      </li>
+      <li class="indent2">
+        <a href="#binutils1">GNU Binutils (Pass 1)</a>
+      </li>
+      <li class="indent2">
+        <a href="#gcc_intro">GCC, the GNU Compiler Collection Intro</a>
+      </li>
+      <li class="indent3">
+        <a href="#gcc_download">Dowloading GCC, the GNU Compiler Collection Intro</a>
+      </li>
+      <li class="indent3">
+        <a href="#gcc_deps">Downloading GMP/MPFR/MPC</a>
+      </li>
+      <li class="indent3">
+        <a href="#gcc_build">Building GCC, the GNU Compiler Collection</a>
+      </li>
+      <li class="indent2">
+        <a href="#gnu">GNU</a>
+      </li>
+      <li class="indent2">
+        <a href="#bash">Setup GNU BASH</a>
+      </li>
+      <li class="indent2">
+        <a href="#coreutils">Setup GNU Coreutils</a>
+      </li>
+      <li class="indent2">
+        <a href="#compile_kernel">Compile the Linux Kernel</a>
+      </li>
+      <li class="indent2">
+        <a href="#kernel_install">Install Linux Kernel and its drivers</a>
+      </li>
+      <li class="indent2">
+        <a href="#bootloader">Create a boot loader</a>
+      </li>
+      <li class="indent2">
+        <a href="#verify">Verify Mezey GNU/Linux boot directory</a>
+      </li>
+      <li class="indent2">
+        <a href="#init_test1">Simple test init</a>
+      </li>
+      <li class="indent2">
+        <a href="#init_setup">Setup our real init system</a>
+      </li>
+      <li class="indent2">
+        <a href="#chroot">Using Chroot</a>
+      </li>
+      <li class="indent2">
+        <a href="#user_setup">User Setup</a>
+      </li>
+      <li class="indent2">
+        <a href="#networking">Setup Networking</a>
+      </li>
+      <li class="indent2">
+        <a href="#mezeypkg">Setting up the mezpkg tool</a>
+      </li>
+      <li class="indent3">
+        <a href="#mezeypkg_anatomy">Anatomy of a mezpkg File</a>
+      </li>
+      <li class="indent3">
+        <a href="#mezeypkg_install">Installing mezpkg Manager</a>
+      </li>
+      <li class="indent3">
+        <a href="#mezeypkg_use">How to use mezpkg Manager</a>
+      </li>
+      <li>
+        <a href="#iso">Create an ISO Image</a>
+      </li>
+      <li>
+        <a href="#notes">Notes</a>
+      </li>
+      <li>
+        <a href="#known_issues">Known issues</a>
+      </li>
+      <li>
+        <a href="#trouble">Trouble Shooting</a>
+      </li>
+    </ul>
+
+    <h2><a name="intro">Intro</a></h2>
+    <p>Before proceeding, understand that Mezey GNU/Linux isn't meant for a first time Linux user.  If you just want a Linux distribution that will work out of the box after running a fancy installer, I recommend something like Ubuntu of Fedora. </p>
+    <p>Be warned, this document may be rough around the edges.  I may be quickly glossing over things I assume you, the reader already understands.  If you think I missed something, or see something wrong with this document, please reach out to me at <a href="mailto:andy@italktocomputers.com">andy@italktocomputers.com</a></p>
+    <p>Last thing.  This guide is for Mezey GNU/Linux ARM64 running on a Raspberry PI 4 computer, however, I will be building Mezey GNU/Linux on a AMD64 (x86_64) system so we will be dealing with cross-compilation.  I'm doing this because my build computer has an 2.4 GHz 8-Core Intel Core i9 processor and 32 GB of RAM, compared to the host computer which is using a Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz with only 8 GB of RAM.  I will be creating a guide on how to build Mezey GNU/Linux using Mezey GNU/Linux, though this will be a much slower build, and will require packaging tools used for the build process.</p>
+    <p><a href="#top">Back to top</a></p>
+
+    <h2><a name="why">Why Mezey GNU/Linux</a></h2>
+
+    <p>Mezey GNU/Linux may be for you if you are someone who really wants to understand how the Linux Kernel and the GNU tools that make up a Linux distribution works, or you like the complete flexibility of compiling everything you need to use with the absolute freedom in what goes into your Linux build.</p>
+    <p>Mezey GNU/Linux does have its own package manager, but these are just packages I have built for my system.  If you need software outside of that realm, you need to compile it and install it yourself.  If that software has dependencies, you need to also compile and install them.  If you need security updates, you need to join some mailing lists.  More on the Mezeypkg file format and the Mezeypkg manager later.</p>
+    <p><a href="#top">Back to top</a></p>
+
+    <h2><a name="install">Install guide</a></h2>
+
+    <h3><a name="build_deps">Build Computer Dependencies</a></h2>
+    <strong>&gt;&gt;&gt;&nbsp;To follow along with this guide, you need to be running a version of Linux x86_64 (amd64) before proceeding.  I am using Ubuntu 18.04 but the flavor of Linux doesn't really matter as long as you meet the following requirements.  If you are using a different package manager other than APT, some of the package names below will be named differently.</strong>
+
+    <p>Required packages (Ubuntu 18.04):</p>
+    <ul>
+      <li>make</li>
+      <li>gcc</li>
+      <li>g++</li>
+      <li>libncurses-dev</li>
+      <li>flex</li>
+      <li>bison</li>
+      <li>libssl-dev</li>
+      <li>libelf-dev</li>
+      <li>lilo</li>
+      <li>texinfo</li>
+      <li>libisl-dev</li>
+      <li>m4</li>
+      <li>gcc-8-aarch64-linux-gnu</li>
+    </ul>
+
+    <p>If you are on Ubuntu 18.04, you can run the following command:</p>
+
+    <code>
+      sudo apt update && sudo apt install -y \ <br />
+        make \<br />
+        gcc \<br />
+        g++ \<br />
+        libncurses-dev \<br />
+        flex \<br />
+        bison \<br />
+        libssl-dev \<br />
+        libelf-dev \<br />
+        lilo \<br />
+        texinfo \<br />
+        libisl-dev \<br />
+        m4 \<br />
+        gcc-8-aarch64-linux-gnu
+    </code>
+
+    <p>I'm assuming here that you also have the basic packages a common GNU/Linux distribution includes, like a way to download files, extract archives and edit files.</p>
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="clean">Clean Environment</a></h3>
+    <p>Because your shell may have environment variables that can cause issues, before running through this installation, always start with a clean shell.  Invoking the code below will only have PATH and PS1 for environment variables, ignoring current environment variables and startup files.</p>
+    <code>env -i PATH=$PATH PS1='Mezey@\w&gt; ' /bin/bash --noprofile --norc</code>
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="global">Global variables</a></h3>
+    <p>Export these environment variables into your new shell.</p>
+    <code>
+      export MEZEY_DIR=~/mezey <br />
+      export MEZEY_BUILD=x86_64-linux-gnu <br />
+      export MEZEY_TARGET=aarch64-linux-gnu <br />
+      export MEZEY_TMP=$MEZEY_DIR/tmp
+    </code>
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="partition">Partition a new hard drive</a></h3>
+    <p>We need an extra disk so we can install Mezey GNU/Linux on it.  Make sure this disk is attached, and has been found.  Run the command below to make sure this disk is listed, and what device name it was given.</p>
+
+    <code>lsblk</code>
+
+    <p>If it's a SATA device and plugged into port 1, it will probably be given the name <i>sdb</i>.</p>
+
+    <p>We will be using the tool fdisk to partition our new hard drive.  You can technically use a different tool to partition your hard drive as long as you are able to create a Master Boot Record and a partition.</p>
+
+    <strong>&gt;&gt;&gt;&nbsp;Since we need to download, extract and build the Linux Kernel, as well as setup Mezey GNU/Linux, this disk should be at least 30 GB.</strong>
+
+    <p>To start fdisk, run the command:</p>
+
+    <code>sudo fdisk /dev/sdb</code>
+
+    <p>Make sure you use the correct device name.  If you have more than two devices, your device name may be /dev/sdc.</p>
+
+    <strong>&gt;&gt;&gt;&nbsp;From now on, I will assume your device name for the Mezey disk is called sdb.  So for any commands that use /dev/sdb, make sure to replace with your device name.</strong>
+    <br /><br />
+    <strong>&gt;&gt;&gt;&nbsp;The following commands will remove any data on the Mezey device so make sure you have the correct device name!</strong>
+    <br /><br />
+    <strong>&gt;&gt;&gt;&nbsp;This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation.  For more information on EFI, visit <a target="_blank" href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface</a>.</strong>
+
+    <p>We need to create our boot sector (a classic generic Master Boot Record). This is not a partition, but rather a section of the disk right before any of the partitions.  This sector will hold our bootable code (more on this later) which can be up to 466 bytes, a partition table and a boot signature.  To create our generic Master Boot Record, type the character <b>o</b>.</p>
+    <p>Now let's create a single partition by typing the character <b>n</b>.  This will then proceed to ask you if this is a <i>primary</i> or <i>extended</i> partition.  Choose <b>p</b> for primary.  Now select the default start sector which should be <i>2048</i> and the default last sector which should be the end of your disk.</p>
+
+    <p>The last command we will type is <b>w</b>, which will write the partition table to our disk and exit.</p>
+
+    <strong>&gt;&gt;&gt;&nbsp;Some users or GNU/Linux distributions prefer to create extra partitions.  For example, Ubuntu has a partition for / and for /boot.  Feel free to partition your Mezey disk anyway you want.</strong>
+
+    <p>Before we can mount this partition, we need to create an ext4 file system on it.  This can be done by using the command:</p>
+
+    <code>sudo mkfs.ext4 /dev/sdb1</code>
+
+    <br /><br />
+
+    <strong>&gt;&gt;&gt;&nbsp;Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.</strong>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="mount">Mount new partition</a></h3>
+
+    <p>Let's create our root directory:</p>
+
+    <code>sudo mkdir $MEZEY_DIR</code>
+
+    <p>We will use this as our mount point for the new partition we just created above.  To mount the partition, run the command:</p>
+
+    <code>sudo mount /dev/sdb1 $MEZEY_DIR</code>
+
+    <br /><br />
+
+    <strong>&gt;&gt;&gt;&nbsp;For convenience, make sure the user you are logged in as has read and write permissions to the $MEZEY_DIR directory.  For example, if you are logged in as the default user, you can use the command below:</strong>
+
+    <br /><br />
+
+    <code>sudo chown 1000:1000 $MEZEY_DIR</code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="directory_tree">Mezey directory tree</a></h3>
+
+    <p>Okay, now it's time to create some directories in our new partition.</p>
+
+    <code>
+      mkdir $MEZEY_DIR/boot <br />
+      mkdir $MEZEY_DIR/etc/ <br />
+      mkdir $MEZEY_DIR/tmp <br />
+      mkdir -p $MEZEY_DIR/usr/local/lib <br />
+      mkdir $MEZEY_DIR/usr/include <br />
+      mkdir $MEZEY_DIR/dev <br />
+      mkdir $MEZEY_DIR/cross <br />
+      mkdir -p $MEZEY_DIR/lib/modules/5.11-Mezey <br />
+    </code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="linux_headers">Get the Linux Kernel headers</a></h3>
+
+    <p>Our next step is to get the Linux Kernel Headers.  I will be using the 5.11 version.  Feel free to use a newer or older version, but be warned, there could be differences between the versions that could cause the steps in this documentation to not work.</p>
+    <p>Run the following commands to download and extract the Linux Kernel source code:</p>
+
+    <code>
+      cd $MEZEY_DIR/tmp <br />
+      wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.tar.xz <br />
+      tar -xvf linux-5.11.tar.xz <br />
+      cd linux-5.11
+    </code>
+
+    <br /><br />
+
+    <strong>&gt;&gt;&gt;&nbsp;I will NOT be discussing here how to verify the kernel signature.  Review the documentation here for more information on how to do this: <a target="_blank" href="https://www.kernel.org/category/signatures.html">https://www.kernel.org/category/signatures.html</a></strong>
+
+    <p>To generate the header files needed for the ARM64 architecture, run the command below:</p>
+
+    <code>make headers_install ARCH=arm64 INSTALL_HDR_PATH=$MEZEY_DIR/usr</code>
+
+    <p>After this command completes, you will have headers installed in:</p>
+
+    <ul>
+      <li>$MEZEY_DIR/usr/include/asm</li>
+      <li>$MEZEY_DIR/usr/include/asm-generic</li>
+      <li>$MEZEY_DIR/usr/include/drm</li>
+      <li>$MEZEY_DIR/usr/include/linux</li>
+      <li>$MEZEY_DIR/usr/include/misc</li>
+      <li>$MEZEY_DIR/usr/include/mtd</li>
+      <li>$MEZEY_DIR/usr/include/rdma</li>
+      <li>$MEZEY_DIR/usr/include/scsi</li>
+      <li>$MEZEY_DIR/usr/include/sound</li>
+      <li>$MEZEY_DIR/usr/include/video</li>
+      <li>$MEZEY_DIR/usr/include/xen</li>
+    </ul>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="binutils1">GNU Binutils (Pass 1)</a></h3>
+
+    <p>This is a collection of binary tools, most notably, a linker and an assembler.  Before we compile this tool, there is a couple of important things to note.  We need to tell binutils we want to cross-compile.  We also have to compile this tool before GCC and the GNU C Library as the configure script in both of these tools actually runs tests against the assembler and linker, so when these tests are ran, they need to run against our new assembler and linker.</p>
+    <p>With that said, we can get this tool here:</p>
+    <code>
+      cd $MEZEY_TMP <br />
+      wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.xz <br />
+      tar -xvf binutils-2.36.tar.xz
+    </code>
+    <p>Now create a build directory for this tool:</p>
+    <code>mkdir binutils-2.36-build && cd binutils-2.36-build </code>
+    <p>and build/install it:</p>
+    <code>
+      ../binutils-2.36/configure \<br />
+      &nbsp;&nbsp;--prefix="$MEZEY_DIR/cross" \<br />
+      &nbsp;&nbsp;--with-sysroot=$MEZEY_TARGET \<br />
+      &nbsp;&nbsp;--build=$MEZEY_BUILD \<br />
+      &nbsp;&nbsp;--host=$MEZEY_BUILD \<br />
+      &nbsp;&nbsp;--target=$MEZEY_TARGET <br />
+      <br />
+      make -j $(nproc)<br />
+      make install
+    </code>
+    <p>Once done, you should have the following binaries installed: </p>
+
+    <ul>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/ar</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/as</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/ld</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/ld.bfd</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/nm</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/objcopy</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/objdump</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/ranlib</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/readelf</li>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/bin/strip</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-addr2line</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-ar</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-as</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-c++filt</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-elfedit</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-gprof</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-ld</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-ld.bfd</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-nm</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-objcopy</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-objdump</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-ranlib</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-readelf</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-size</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-strings</li>
+      <li>$MEZEY_DIR/usr/local/bin/aarch64-linux-gnu-strip</li>
+    </ul>
+
+    And a bunch of files in:
+
+    <ul>
+      <li>$MEZEY_DIR/usr/local/aarch64-linux-gnu/lib/ldscripts/</li>
+      <li>$MEZEY_DIR/usr/local/lib/</li>
+      <li>$MEZEY_DIR/usr/local/include/</li>
+      <li>$MEZEY_DIR/usr/local/share/</li>
+    </ul>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="gcc_intro">GCC, the GNU Compiler Collection Intro</a></h3>
+
+    <p>The GNU compiler is a front-end for C and C++.</p>
+    <p>Goal: Create a compiler that runs on x86_64 architecture (host) but will produce aarch64 (build) code.</p>
+    <p>Before we proceed with compiling this tool, note we are building a degraded compiler.  Why is this?  The GCC compiler we are building will NOT have the Standard C Library (we haven't built it yet).  However, this will be enough to compile the C Standard Library with.  Once we build the C Standard Library, we will have a complete cross-compiler to build our tools (including a native compiler) that will allow us to enter a chroot environment (more on this later).</p>
+
+    <p>We also need to download some dependencies which we can download using the command below.  By downloading these libraries into the GCC source directory, they will be statically linked when building GCC.  If you skip this step, GCC will find these libraries elsewhere and dynamically link to them which will not work when trying to compile the C Library.</p>
+
+    <p>For more information on the GCC installation process, you can visit: <a target="_blank" href="https://gcc.gnu.org/wiki/InstallingGCC">https://gcc.gnu.org/wiki/InstallingGCC</a></p>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h4><a name="gcc_download">Downloading the GCC, the GNU Compiler Collection</a></h4>
+
+    <code>
+      cd $MEZEY_TMP <br />
+      wget https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz <br />
+      tar -xvf gcc-10.2.0.tar.gz
+    </code>
+
+    <h4><a name="gcc_deps">Downloading GMP/MPFR/MPC</a></h4>
+
+    <code>
+      cd gcc-10.2.0 <br />
+      ./contrib/download_prerequisites
+    </code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h4><a name="gcc_build">Building GCC, the GNU Compiler Collection</a></h4>
+
+    <p>Create a build directory:</p>
+
+    <code>
+      cd $MEZEY_TMP <br />
+      mkdir gcc-10.2.0-build <br />
+      cd gcc-10.2.0-build
+    </code>
+
+    <p>Proceeding, we can now build GCC:</p>
+
+    <strong>&gt;&gt;&gt;&nbsp;Build is the architecture we are compiling the compiler on, host is the architecture the compiler will run on and target is the architecture the compiler will produce code for.</strong>
+
+    <br /> <br />
+
+    <strong>&gt;&gt;&gt;&nbsp;The configure option -with-newlib prevents the compiling of any code that requires the C Standard Library by telling the compiler that we will be using newlib instead, which is a lightweight C Standard Library for embedded systems.  We won't be actually using newlib, but this is a way to compile GCC without the C Standard Library.</strong>
+
+    <br /> <br />
+
+    <code>
+      ../gcc-10.2.0/configure \<br />
+      &nbsp;&nbsp;--target=$MEZEY_TARGET \<br />
+      &nbsp;&nbsp;--host=$MEZEY_BUILD \<br />
+      &nbsp;&nbsp;--build=$MEZEY_BUILD \<br />
+      &nbsp;&nbsp;--prefix=$MEZEY_DIR/cross \<br />
+      &nbsp;&nbsp;--with-newlib \<br />
+      &nbsp;&nbsp;--without-headers \<br />
+      &nbsp;&nbsp;--enable-initfini-array \<br />
+      &nbsp;&nbsp;--enable-languages=c,c++ \<br />
+      &nbsp;&nbsp;--disable-nls \<br />
+      &nbsp;&nbsp;--disable-shared \<br />
+      &nbsp;&nbsp;--disable-multilib \<br />
+      &nbsp;&nbsp;--disable-decimal-float \<br />
+      &nbsp;&nbsp;--disable-threads \<br />
+      &nbsp;&nbsp;--disable-libatomic \<br />
+      &nbsp;&nbsp;--disable-libgomp \<br />
+      &nbsp;&nbsp;--disable-libquadmath \<br />
+      &nbsp;&nbsp;--disable-libssp \<br />
+      &nbsp;&nbsp;--disable-libvtv \<br />
+      &nbsp;&nbsp;--disable-libstdcxx
+          <br /><br />
+      make all -j $(nproc)<br />
+      make install
+    </code>
+
+    <br />
+
+    <p>Once done, you should have the following binaries installed: </p>
+
+    <ul>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-c++</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-cpp</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-g++</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcc</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcc-10.2.0</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcc-ar</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcc-nm</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcc-ranlib</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcov</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcov-dump</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-gcov-tool</li>
+      <li>$MEZEY_DIR/bin/aarch64-linux-gnu-lto-dump</li>
+    </ul>
+
+    <p>And a bunch of other files in: </p>
+    <ul>
+      <li>$MEZEY_DIR/lib/gcc/aarch64-linux-gnu/</li>
+    </ul>
+
+    <strong>&gt;&gt;&gt;&nbsp;As you can see in the files listed above, GCC is also providing the files ar and nm.  This is not redudant.  These are wrappers around the binaries provided by the binutils package.  Since GCC supports plugins, this allows for dynamic loading a recognizer/analyser. </strong>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="gnu">GNU C Library</a></h3>
+    <p>The C library provides API's we will use to talk to the Linux Kernel.  We are going to build the C Library against our Linux Kernel headers we extracted in earlier steps, and build it using the cross-compiler we just built above.  For more information on compile options, visit this page: <a target="_blank" href="https://www.gnu.org/software/libc/manual/html_node/Configuring-and-compiling.html">https://www.gnu.org/software/libc/manual/html_node/Configuring-and-compiling.html</a>.</p>
+    <p>Run the commands below to download and extract the C library:</p>
+    <code>
+      cd $MEZEY_DIR/tmp/ <br />
+      wget http://mirrors.kernel.org/gnu/libc/glibc-2.33.tar.xz <br />
+      tar -xvf glibc-2.33.tar.xz <br />
+    </code>
+
+    <p>To compile the C library, we need to create a build directory:</p>
+
+    <code>mkdir glibc-2.33-build/ && cd glibc-2.33-build/</code>
+
+    <p>Now let's build the C Library:</p>
+
+    <code>
+      CC=$MEZEY_DIR/cross/bin/aarch64-linux-gnu-gcc \<br />
+      ../glibc-2.33/configure \<br />
+      &nbsp;&nbsp;--with-headers=$MEZEY_DIR/usr/include \<br />
+      &nbsp;&nbsp;--enable-kernel=5.11 \<br />
+      &nbsp;&nbsp;--build=$MEZEY_BUILD \<br />
+      &nbsp;&nbsp;--host=$MEZEY_TARGET \<br />
+      &nbsp;&nbsp;--disable-sanity-checks\<br />
+      &nbsp;&nbsp;--disable-werror <br />
+      <br />
+      make -j $(nproc)<br />
+      make install DESTDIR=$MEZEY_DIR
+    </code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="bash">Setup GNU BASH</a></h3>
+    <p>Everyone needs a shell... Well, almost everyone.  For Mezey GNU/Linux, we are going to install GNU bash.  This shell can be downloaded here:</p>
+    <code>wget ftp://ftp.gnu.org/gnu/bash/bash-5.1.tar.gz</code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="coreutils">Setup GNU Coreutils</a></h3>
+    <p>In order to use things like ls, cd, etc., we need a bunch of utilities.  Luckily for us, there is GNU Coreutils which has a lot of utilities we can use for our Mezey GNU/Linux installation.</p>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="compile_kernel">Compile the Linux Kernel</a></h3>
+    <p>Our next step is to compile the Linux Kernel.  I will be using the 5.11 version.  Feel free to use a newer or older version, but be warned, there could be differences between the versions that could cause the steps in this documentation to not work.</p>
+    <p>The Linux Kernel has a lot of configurations.  Too many to list and discuss here.  If you know about the different Linux Kernel configurations and want to make some adjustments, feel free.</p>
+    <p>We however need to make some adjustments.  This is also a good time to discuss the Linux Kernel boot process.  In order for the Linux Kernel to read our Mezey disk, it needs to load some drivers so it can understand how to read the disk.  However, these drivers are located on the disk it first needs to understand.  It's a chicken and egg problem.  To solve this problem, we have two solutions.  The first solution which I think is the easiest, is to compile those drivers directly into the Linux Kernel.  If you do NOT like the idea of compiling these drivers into the Linux Kernel, you can go with the second option, which is to create a RAM disk that will hold these early boot drivers.  The boot loader will mount this RAM disk during the boot process, and from there, the Linux Kernel will have access to this temporary file system with the necessary drivers to load the Mezey disk and the permanent file system.  I will not be creating a RAM disk.  I will build the Linux Kernel with these drivers.</p>
+    <p>To load the configuration menu, run the command:</p>
+
+    <code>make menuconfig</code>
+
+    <p>Go to <i>Device Drivers</i> -> <i>Serial ATA and Parallel ATA drivers (libra)</i> and for the option <i>AHCI SATA support</i>, set the value to <i>built-in</i>.  This means this driver will be compiled into the Linux Kernel.</p>
+
+    <p>Exit these sub menus and go to <i>File systems</i>.  Make sure the <i>ext2</i> and <i>ext3</i> file systems are set to <i>built-in</i>.</p>
+
+    <p>Exit this sub menu and got to <i>General Setup</i> -> <i>Compile-time checks and compiler options</i>.  Make sure <i>Install uapi headers to usr/include</i> is set to <i>built-in</i>.</p>
+    <p>Save your configurations and exit.</p>
+    <p>Now that we are happy with our configurations, we can start to build the Linux Kernel.</p>
+
+    <code>make -j $(nproc) </code>
+
+    <br />
+
+    <p>Once the compilation process is done, we can compress the Linux Kernel:</p>
+
+    <code>make bzImage</code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="kernel_install">Install Linux Kernel and its drivers</a></h3>
+    <p>The following commands will install the Linux kernel and the kernel modules onto the Mezey disk.</p>
+
+    <code>
+      export INSTALL_PATH=$MEZEY_DIR/boot/ <br />
+      export INSTALL_MOD_PATH=$MEZEY_DIR/lib/modules/5.11-Mezey <br />
+      make install <br />
+      make modules_install
+    </code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="bootloader">Create a boot loader</a></h3>
+
+    <p>You can technically use any boot loader you like, but I will be using LILO.  It's simple, and lightweight (but also deprecated).</p>
+    <p>First thing first, create the file /Mezey/etc/lilo.conf and add the following contents:</p>
+
+    <code>
+      disk=/dev/sdb bios=0x80 <br />
+      boot=/dev/sdb <br />
+      map=/boot/map <br />
+      install=/boot/boot.b <br />
+      image=/boot/vmlinuz-5.11.0 <br />
+      &nbsp;&nbsp;label=Mezey-linux <br />
+      &nbsp;&nbsp;root=/dev/sda1
+    </code>
+
+    <p>Now we need to create the boot loader, and some other configuration files by running the commands:</p>
+
+    <code>
+      sudo umount /boot <br />
+      sudo mount -bind $MEZEY_DIR/boot /boot <br />
+      sudo lilo -C $MEZEY_DIR/etc/lilo.conf <br />
+    </code>
+
+    <p>This command will add the LILO boot loader to the first sector of our Mezey disk, and also create a couple of configuration files in our boot directory.</p>
+
+    <strong>&gt;&gt;&gt;&nbsp;Be carful, and make sure disk and boot point to your Mezey disk device name, or you may overwrite your current boot loader!</strong>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="verify">Verify Mezey GNU/Linux boot directory</a></h3>
+    <p>So far, our boot directory should look like below:</p>
+    <code>
+      ./boot.0810 <br />
+      ./config-5.11.0 <br />
+      ./map <br />
+      ./System.map-5.11.0 <br />
+      ./vmlinuz-5.11.0
+    </code>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="init_test1">Simple test init</a></h3>
+    <p>To confirm we have a working system, we are going to make a simple init system that will just print the text <i>Welcome to Mezey GNU/Linux!</i> when the Linux Kernel boots.  This will be simple, as we only need a few lines of code:</p>
+
+    <code>
+      int main(int argc, char** args) { <br />
+      &nbsp;&nbsp;printf("Hello from Mezey GNU/Linux!"); <br />
+      &nbsp;&nbsp;return 0; <br />
+      }
+    </code>
+
+    <p>Save this code to a file called <i>$MEZEY_DIR/init.c</i>.  To compile this code, we want to make sure we use the new C Library we just compiled:</p>
+
+    <code>
+      gcc -Xlinker -rpath=$MEZEY_DIR/usr/local/lib \ <br />
+      &nbsp;&nbsp;-Xlinker -I$MEZEY_DIR/usr/local/lib/ld-2.33.so init.c
+    </code>
+
+    <p>And now copy this file to our <i>/sbin</i> directory:</p>
+
+    <code>cp a.out $MEZEY_DIR/sbin/init</code>
+
+    <p>It is at this point I like to verify we have a bootable disk running the LILO boot loader and the Linux Kernel.  To verify, we need to shutdown the machine and attach our Mezey disk to SATA port 0 of the computer.</p>
+    <p>Doing so, you should see the message <i>Hello from Mezey GNU/Linux!</i>  If you see this, congrats!  You have a working Linux Kernel with the C Standard Library.  If you see an error message that complains about <i>Unable to mount root fs on unknown-block...</i>, this is most likely caused by the Linux Kernel not understanding the SCSI disk.  Make sure you have complied the Linux Kernel correctly with the necessary drivers built-in.</p>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="init_setup">Setup our real init system</a></h3>
+    <p>I will be going with a SysV style init system.  Feel free to use Systemd, but I will not be discussing it here.</p>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="chroot">Using Chroot</a></h3>
+    <p>Before proceeding to the next step, we need to use a tool called chroot.  This will make things easier moving forward as we don't need to do any special linking to our Mezey directory.  We will trick the system into thinking that the Mezey directory is actually our root directory.</p>
+
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="user_setup">User Setup</a></h3>
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="networking">Setup Networking</a></h3>
+    <p><a href="#top">Back to top</a></p>
+
+    <h3><a name="iso">Create an ISO Image</a></h3>
+    <p><a href="#top">Back to top</a></p>
+  </body>
+</html>
