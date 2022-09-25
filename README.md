@@ -1,3 +1,5 @@
+## NOTE: This documentation is not complete!
+
 🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64) body { font-family: 'Times New Roman', Times, serif; } strong { font-family: 'Times New Roman', Times, serif; font-style: italic; } code { font-family:Georgia, 'Times New Roman', Times, serif; background-color: lemonchiffon; } li.indent2 { margin-left: 10px; } li.indent3 { margin-left: 20px; }
 
 🪐 Mezey GNU/Linux
