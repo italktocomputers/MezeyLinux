@@ -51,7 +51,7 @@ Index
 *   [Known issues](#known_issues)
 *   [Trouble Shooting](#trouble)
 
-{#into}Intro
+Intro
 -----
 
 Before proceeding, understand that Mezey GNU/Linux isn't meant for a first time Linux user. If you just want a Linux distribution that will work out of the box after running a fancy installer, I recommend something like Ubuntu or Fedora.
