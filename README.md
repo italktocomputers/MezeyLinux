@@ -16,7 +16,7 @@ Index
 -----
 
 *   [Intro](#intro)
-*   [Why Mezey GNU/Linux](#why-mezey-gnu/linux)
+*   [Why Mezey GNU/Linux](#why-mezey-gnulinux)
 *   [Install guide](#install-guide)
 *   [Build Computer Dependencies](#build_deps)
 *   [Clean Environment](#clean-environment)
@@ -25,31 +25,32 @@ Index
 *   [Mount new partition](#mount-new-partition)
 *   [Mezey directory tree](#mezey-directory-tree)
 *   [Get the Linux Kernel headers](#get-the-linux-kernel-headers)
-*   [GNU Binutils (Pass 1)](#-gnu-binutils-(pass-1))
-*   [GCC, the GNU Compiler Collection Intro](#gcc_intro)
-*   [Dowloading GCC, the GNU Compiler Collection Intro](#gcc_download)
-*   [Downloading GMP/MPFR/MPC](#gcc_deps)
-*   [Building GCC, the GNU Compiler Collection](#gcc_build)
-*   [GNU](#gnu)
-*   [Setup GNU BASH](#bash)
-*   [Setup GNU Coreutils](#coreutils)
-*   [Compile the Linux Kernel](#compile_kernel)
-*   [Install Linux Kernel and its drivers](#kernel_install)
-*   [Create a boot loader](#bootloader)
-*   [Verify Mezey GNU/Linux boot directory](#verify)
-*   [Simple test init](#init_test1)
-*   [Setup our real init system](#init_setup)
-*   [Using Chroot](#chroot)
-*   [User Setup](#user_setup)
-*   [Setup Networking](#networking)
-*   [Setting up the mezpkg tool](#mezeypkg)
-*   [Anatomy of a mezpkg File](#mezeypkg_anatomy)
-*   [Installing mezpkg Manager](#mezeypkg_install)
-*   [How to use mezpkg Manager](#mezeypkg_use)
+*   [GNU Binutils (Pass 1)](#-gnu-binutils-pass-1)
+*   [GCC, the GNU Compiler Collection Intro](#gcc-the-gnu-compiler-collection-intro)
+*   [Dowloading GCC, the GNU Compiler Collection Intro](#downloading-the-gcc-the-gnu-compiler-collection)
+*   [Downloading GMP/MPFR/MPC](#downloading-gmp-mpfr-mpc)
+*   [Building GCC, the GNU Compiler Collection](#building-gcc-the-gnu-compiler-collection)
+*   [GNU](#gnu-c-library)
+*   [Setup GNU BASH](#setup-gnu-bash)
+*   [Setup GNU Coreutils](#setup-gnu-coreutils)
+*   [Compile the Linux Kernel](#compile-the-linux-kernel)
+*   [Install Linux Kernel and its drivers](#install-linux-kernel-and-its-drivers)
+*   [Create a boot loader](#create-a-boot-loader)
+*   [Verify Mezey GNU/Linux boot directory](#verify-mezey-gnulinux-boot-directory)
+*   [Simple test init](#simple-test-init)
+*   [Setup our real init system](#setup-our-real-init-system)
+*   [Using Chroot](#using-chroot)
+*   [User Setup](#user-setup)
+*   [Setup Networking](#setup-networking)
+*   [Setup Networking](#setup-networking)
 *   [Create an ISO Image](#iso)
+*   [Setting up the mezpkg tool](#setting-up-the-mezpkg-tool)
+*   [Anatomy of a mezpkg file](#anatomy-of-a-mezpkg-file)
+*   [Installing mezpkg manager](#installing-mezpkg-manager)
+*   [How to use mezpkg manager](#how-to-use-mezpkg-manager)
 *   [Notes](#notes)
-*   [Known issues](#known_issues)
-*   [Trouble Shooting](#trouble)
+*   [Known issues](#known-issues)
+*   [Trouble shooting](#trouble-shooting)
 
 Intro
 -----
@@ -464,5 +465,33 @@ Before proceeding to the next step, we need to use a tool called chroot. This wi
 [Back to top](#top)
 
 ### Create an ISO Image
+
+[Back to top](#top)
+
+### Setting up the mezpkg tool
+
+[Back to top](#top)
+
+### Anatomy of a mezpkg file
+
+[Back to top](#top)
+
+### Installing mezpkg manager
+
+[Back to top](#top)
+
+### How to use mezpkg manager
+
+[Back to top](#top)
+
+### Notes
+
+[Back to top](#top)
+
+### Known issues
+
+[Back to top](#top)
+
+### Trouble shooting
 
 [Back to top](#top)
