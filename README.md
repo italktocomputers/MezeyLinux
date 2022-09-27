@@ -96,7 +96,22 @@ Required packages (Ubuntu 18.04):
 
 If you are on Ubuntu 18.04, you can run the following command:
 
-`sudo apt update && sudo apt install -y \   make \   gcc \   g++ \   libncurses-dev \   flex \   bison \   libssl-dev \   libelf-dev \   lilo \   texinfo \   libisl-dev \   m4 \   gcc-8-aarch64-linux-gnu`
+```
+sudo apt update && sudo apt install -y \   
+  make \   
+  gcc \   
+  g++ \   
+  libncurses-dev \   
+  flex \   
+  bison \   
+  libssl-dev \   
+  libelf-dev \   
+  lilo \   
+  texinfo \   
+  libisl-dev \   
+  m4 \   
+  gcc-8-aarch64-linux-gnu
+```
 
 I'm assuming here that you also have the basic packages a common GNU/Linux distribution includes, like a way to download files, extract archives and edit files.
 
