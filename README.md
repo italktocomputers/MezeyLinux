@@ -51,14 +51,14 @@ Index
 *   [Known issues](#known_issues)
 *   [Trouble Shooting](#trouble)
 
-Intro
+{#into}Intro
 -----
 
-Before proceeding, understand that Mezey GNU/Linux isn't meant for a first time Linux user. If you just want a Linux distribution that will work out of the box after running a fancy installer, I recommend something like Ubuntu of Fedora.
+Before proceeding, understand that Mezey GNU/Linux isn't meant for a first time Linux user. If you just want a Linux distribution that will work out of the box after running a fancy installer, I recommend something like Ubuntu or Fedora.
 
-Be warned, this document may be rough around the edges. I may be quickly glossing over things I assume you, the reader already understands. If you think I missed something, or see something wrong with this document, please reach out to me at [andy@italktocomputers.com](mailto:andy@italktocomputers.com)
+Be warned, this document may be rough around the edges. I may be quickly glossing over things I assume you, the reader already understands. If you think I missed something, or see something wrong with this document, please reach out to me here: [https://groups.google.com/g/mezey-linux](https://groups.google.com/g/mezey-linux)
 
-Last thing. This guide is for Mezey GNU/Linux ARM64 running on a Raspberry PI 4 computer, however, I will be building Mezey GNU/Linux on a AMD64 (x86\_64) system so we will be dealing with cross-compilation. I'm doing this because my build computer has an 2.4 GHz 8-Core Intel Core i9 processor and 32 GB of RAM, compared to the host computer which is using a Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz with only 8 GB of RAM. I will be creating a guide on how to build Mezey GNU/Linux using Mezey GNU/Linux, though this will be a much slower build, and will require packaging tools used for the build process.
+One last thing. This guide is for Mezey GNU/Linux ARM64 running on a Raspberry PI 4 computer, however, I will be building Mezey GNU/Linux on a AMD64 (x86\_64) system so we will be dealing with cross-compilation. I'm doing this because my build computer has an 2.4 GHz 8-Core Intel Core i9 processor and 32 GB of RAM, compared to the host computer which is using a Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz with only 8 GB of RAM. I will be creating a guide on how to build Mezey GNU/Linux using Mezey GNU/Linux, though this will be a much slower build, and will require packaging tools used for the build process.
 
 [Back to top](#top)
 
