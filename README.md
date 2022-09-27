@@ -1,8 +1,7 @@
 ## NOTE: This documentation is not complete!
 
-🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64) body { font-family: 'Times New Roman', Times, serif; } strong { font-family: 'Times New Roman', Times, serif; font-style: italic; } code { font-family:Georgia, 'Times New Roman', Times, serif; background-color: lemonchiffon; } li.indent2 { margin-left: 10px; } li.indent3 { margin-left: 20px; }
+🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64)
 
-🪐 Mezey GNU/Linux
 ==================
 
 #### \>>> For Raspberry PI 4 (ARM64)
@@ -11,7 +10,7 @@ Author: Andrew Schools
 Date of Publication: Feb 27th, 2021  
 Date of Modification: Feb 27th, 2021
 
-Mailing lists: [mezey-help@italktocomputers.com](mailto:mezey-help@italktocomputers.com) | [mezey-news@italktocomputers.com](mailto:Mmzey-news@italktocomputers.com) | [mezey-security@italktocomputers.com](mailto:mezey-security@italktocomputers.com)
+Mailing list: [https://groups.google.com/g/mezey-linux](https://groups.google.com/g/mezey-linux)
 
 Index
 -----
