@@ -129,7 +129,12 @@ Because your shell may have environment variables that can cause issues, before 
 
 Export these environment variables into your new shell.
 
-`export MEZEY_DIR=~/mezey   export MEZEY_BUILD=x86_64-linux-gnu   export MEZEY_TARGET=aarch64-linux-gnu   export MEZEY_TMP=$MEZEY_DIR/tmp`
+```
+export MEZEY_DIR=~/mezey   
+export MEZEY_BUILD=x86_64-linux-gnu   
+export MEZEY_TARGET=aarch64-linux-gnu   
+export MEZEY_TMP=$MEZEY_DIR/tmp
+```
 
 [Back to top](#top)
 
@@ -193,7 +198,16 @@ We will use this as our mount point for the new partition we just created above.
 
 Okay, now it's time to create some directories in our new partition.
 
-`mkdir $MEZEY_DIR/boot   mkdir $MEZEY_DIR/etc/   mkdir $MEZEY_DIR/tmp   mkdir -p $MEZEY_DIR/usr/local/lib   mkdir $MEZEY_DIR/usr/include   mkdir $MEZEY_DIR/dev   mkdir $MEZEY_DIR/cross   mkdir -p $MEZEY_DIR/lib/modules/5.11-Mezey   `
+```
+mkdir $MEZEY_DIR/boot   
+mkdir $MEZEY_DIR/etc/   
+mkdir $MEZEY_DIR/tmp   
+mkdir -p $MEZEY_DIR/usr/local/lib   
+mkdir $MEZEY_DIR/usr/include   
+mkdir $MEZEY_DIR/dev   
+mkdir $MEZEY_DIR/cross   
+mkdir -p $MEZEY_DIR/lib/modules/5.11-Mezey
+```
 
 [Back to top](#top)
 
@@ -233,7 +247,11 @@ This is a collection of binary tools, most notably, a linker and an assembler. B
 
 With that said, we can get this tool here:
 
-`cd $MEZEY_TMP   wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.xz   tar -xvf binutils-2.36.tar.xz`
+```
+cd $MEZEY_TMP   
+wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.xz   
+tar -xvf binutils-2.36.tar.xz
+```
 
 Now create a build directory for this tool:
 
@@ -241,7 +259,16 @@ Now create a build directory for this tool:
 
 and build/install it:
 
-`../binutils-2.36/configure \     --prefix="$MEZEY_DIR/cross" \     --with-sysroot=$MEZEY_TARGET \     --build=$MEZEY_BUILD \     --host=$MEZEY_BUILD \     --target=$MEZEY_TARGET      make -j $(nproc)   make install`
+```
+../binutils-2.36/configure \     
+  --prefix="$MEZEY_DIR/cross" \     
+  --with-sysroot=$MEZEY_TARGET \     
+  --build=$MEZEY_BUILD \     
+  --host=$MEZEY_BUILD \     
+  --target=$MEZEY_TARGET      
+make -j $(nproc)   
+make install
+```
 
 Once done, you should have the following binaries installed:
 
@@ -297,11 +324,18 @@ For more information on the GCC installation process, you can visit: [https://gc
 
 #### Downloading the GCC, the GNU Compiler Collection
 
-`cd $MEZEY_TMP   wget https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz   tar -xvf gcc-10.2.0.tar.gz`
+```
+cd $MEZEY_TMP   
+wget https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz   
+tar -xvf gcc-10.2.0.tar.gz
+```
 
 #### Downloading GMP/MPFR/MPC
 
-`cd gcc-10.2.0   ./contrib/download_prerequisites`
+```
+cd gcc-10.2.0   
+./contrib/download_prerequisites
+```
 
 [Back to top](#top)
 
@@ -309,7 +343,11 @@ For more information on the GCC installation process, you can visit: [https://gc
 
 Create a build directory:
 
-`cd $MEZEY_TMP   mkdir gcc-10.2.0-build   cd gcc-10.2.0-build`
+```
+cd $MEZEY_TMP   
+mkdir gcc-10.2.0-build   
+cd gcc-10.2.0-build
+```
 
 Proceeding, we can now build GCC:
 
@@ -317,7 +355,30 @@ Proceeding, we can now build GCC:
   
 **\>>> The configure option -with-newlib prevents the compiling of any code that requires the C Standard Library by telling the compiler that we will be using newlib instead, which is a lightweight C Standard Library for embedded systems. We won't be actually using newlib, but this is a way to compile GCC without the C Standard Library.**  
   
-`../gcc-10.2.0/configure \     --target=$MEZEY_TARGET \     --host=$MEZEY_BUILD \     --build=$MEZEY_BUILD \     --prefix=$MEZEY_DIR/cross \     --with-newlib \     --without-headers \     --enable-initfini-array \     --enable-languages=c,c++ \     --disable-nls \     --disable-shared \     --disable-multilib \     --disable-decimal-float \     --disable-threads \     --disable-libatomic \     --disable-libgomp \     --disable-libquadmath \     --disable-libssp \     --disable-libvtv \     --disable-libstdcxx      make all -j $(nproc)   make install`  
+```
+../gcc-10.2.0/configure \     
+  --target=$MEZEY_TARGET \     
+  --host=$MEZEY_BUILD \     
+  --build=$MEZEY_BUILD \     
+  --prefix=$MEZEY_DIR/cross \     
+  --with-newlib \     
+  --without-headers \     
+  --enable-initfini-array \     
+  --enable-languages=c,c++ \     
+  --disable-nls \     
+  --disable-shared \     
+  --disable-multilib \     
+  --disable-decimal-float \     
+  --disable-threads \     
+  --disable-libatomic \     
+  --disable-libgomp \     
+  --disable-libquadmath \     
+  --disable-libssp \     
+  --disable-libvtv \     
+  --disable-libstdcxx      
+make all -j $(nproc)   
+make install
+```  
 
 Once done, you should have the following binaries installed:
 
