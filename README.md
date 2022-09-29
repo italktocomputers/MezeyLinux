@@ -217,7 +217,12 @@ Our next step is to get the Linux Kernel Headers. I will be using the 5.11 versi
 
 Run the following commands to download and extract the Linux Kernel source code:
 
-`cd $MEZEY_DIR/tmp   wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.tar.xz   tar -xvf linux-5.11.tar.xz   cd linux-5.11`  
+```
+cd $MEZEY_DIR/tmp   
+wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.tar.xz   
+tar -xvf linux-5.11.tar.xz   
+cd linux-5.11
+```
   
 **\>>> I will NOT be discussing here how to verify the kernel signature. Review the documentation here for more information on how to do this: [https://www.kernel.org/category/signatures.html](https://www.kernel.org/category/signatures.html)**
 
@@ -409,7 +414,11 @@ The C library provides API's we will use to talk to the Linux Kernel. We are goi
 
 Run the commands below to download and extract the C library:
 
-`cd $MEZEY_DIR/tmp/   wget http://mirrors.kernel.org/gnu/libc/glibc-2.33.tar.xz   tar -xvf glibc-2.33.tar.xz   `
+```
+cd $MEZEY_DIR/tmp/   
+wget http://mirrors.kernel.org/gnu/libc/glibc-2.33.tar.xz   
+tar -xvf glibc-2.33.tar.xz   
+```
 
 To compile the C library, we need to create a build directory:
 
@@ -417,7 +426,17 @@ To compile the C library, we need to create a build directory:
 
 Now let's build the C Library:
 
-`CC=$MEZEY_DIR/cross/bin/aarch64-linux-gnu-gcc \   ../glibc-2.33/configure \     --with-headers=$MEZEY_DIR/usr/include \     --enable-kernel=5.11 \     --build=$MEZEY_BUILD \     --host=$MEZEY_TARGET \     --disable-sanity-checks\     --disable-werror      make -j $(nproc)   make install DESTDIR=$MEZEY_DIR`
+```
+CC=$MEZEY_DIR/cross/bin/aarch64-linux-gnu-gcc ../glibc-2.33/configure \     
+  --with-headers=$MEZEY_DIR/usr/include \     
+  --enable-kernel=5.11 \     
+  --build=$MEZEY_BUILD \     
+  --host=$MEZEY_TARGET \     
+  --disable-sanity-checks\     
+  --disable-werror     
+make -j $(nproc)   
+make install DESTDIR=$MEZEY_DIR
+```
 
 [Back to top](#top)
 
@@ -469,7 +488,12 @@ Once the compilation process is done, we can compress the Linux Kernel:
 
 The following commands will install the Linux kernel and the kernel modules onto the Mezey disk.
 
-`export INSTALL_PATH=$MEZEY_DIR/boot/   export INSTALL_MOD_PATH=$MEZEY_DIR/lib/modules/5.11-Mezey   make install   make modules_install`
+```
+export INSTALL_PATH=$MEZEY_DIR/boot/   
+export INSTALL_MOD_PATH=$MEZEY_DIR/lib/modules/5.11-Mezey   
+make install   
+make modules_install
+```
 
 [Back to top](#top)
 
@@ -477,13 +501,25 @@ The following commands will install the Linux kernel and the kernel modules onto
 
 You can technically use any boot loader you like, but I will be using LILO. It's simple, and lightweight (but also deprecated).
 
-First thing first, create the file /Mezey/etc/lilo.conf and add the following contents:
+First thing first, create the file `/Mezey/etc/lilo.conf` and add the following contents:
 
-`disk=/dev/sdb bios=0x80   boot=/dev/sdb   map=/boot/map   install=/boot/boot.b   image=/boot/vmlinuz-5.11.0     label=Mezey-linux     root=/dev/sda1`
+```
+disk=/dev/sdb bios=0x80   
+boot=/dev/sdb   
+map=/boot/map   
+install=/boot/boot.b   
+image=/boot/vmlinuz-5.11.0     
+label=Mezey-linux     
+root=/dev/sda1
+```
 
 Now we need to create the boot loader, and some other configuration files by running the commands:
 
-`sudo umount /boot   sudo mount -bind $MEZEY_DIR/boot /boot   sudo lilo -C $MEZEY_DIR/etc/lilo.conf   `
+```
+sudo umount /boot   
+sudo mount -bind $MEZEY_DIR/boot /boot   
+sudo lilo -C $MEZEY_DIR/etc/lilo.conf   
+```
 
 This command will add the LILO boot loader to the first sector of our Mezey disk, and also create a couple of configuration files in our boot directory.
 
@@ -503,11 +539,19 @@ So far, our boot directory should look like below:
 
 To confirm we have a working system, we are going to make a simple init system that will just print the text _Welcome to Mezey GNU/Linux!_ when the Linux Kernel boots. This will be simple, as we only need a few lines of code:
 
-`int main(int argc, char** args) {     printf("Hello from Mezey GNU/Linux!");     return 0;   }`
+```
+int main(int argc, char** args) {     
+    printf("Hello from Mezey GNU/Linux!");     
+    return 0;   
+}
+```
 
 Save this code to a file called _$MEZEY\_DIR/init.c_. To compile this code, we want to make sure we use the new C Library we just compiled:
 
-`gcc -Xlinker -rpath=$MEZEY_DIR/usr/local/lib \     -Xlinker -I$MEZEY_DIR/usr/local/lib/ld-2.33.so init.c`
+```
+gcc -Xlinker -rpath=$MEZEY_DIR/usr/local/lib \     
+    -Xlinker -I$MEZEY_DIR/usr/local/lib/ld-2.33.so init.c
+```
 
 And now copy this file to our _/sbin_ directory:
 
