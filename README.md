@@ -1,10 +1,12 @@
-### NOTE: This documentation is not complete!
-
 # 🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64)
 
 | Author | Date of Publication | Date of Modification | Mailing list
 --- | --- | ---| ---|
 |Andrew Schools|Feb 27th, 2021 |Sep 29th, 2022|[📧](https://groups.google.com/g/mezey-linux)
+
+> **Note**
+> 
+> This documentation is not complete!
 
 Index
 -----
