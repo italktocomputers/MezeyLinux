@@ -6,9 +6,9 @@
 
 #### \>>> For Raspberry PI 4 (ARM64)
 
-Author: Andrew Schools  
-Date of Publication: Feb 27th, 2021  
-Date of Modification: Feb 27th, 2021
+Author:                 Andrew Schools  
+Date of Publication:    Feb 27th, 2021  
+Date of Modification:   Sep 29th, 2022
 
 Mailing list: [https://groups.google.com/g/mezey-linux](https://groups.google.com/g/mezey-linux)
 
@@ -58,7 +58,7 @@ Before proceeding, understand that Mezey GNU/Linux isn't meant for a first time 
 
 Be warned, this document may be rough around the edges. I may be quickly glossing over things I assume you, the reader already understands. If you think I missed something, or see something wrong with this document, please reach out to me here: [https://groups.google.com/g/mezey-linux](https://groups.google.com/g/mezey-linux)
 
-One last thing. This guide is for Mezey GNU/Linux ARM64 running on a Raspberry PI 4 computer, however, I will be building Mezey GNU/Linux on a AMD64 (x86\_64) system so we will be dealing with cross-compilation. I'm doing this because my build computer has an 2.4 GHz 8-Core Intel Core i9 processor and 32 GB of RAM, compared to the host computer which is using a Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz with only 8 GB of RAM. I will be creating a guide on how to build Mezey GNU/Linux using Mezey GNU/Linux, though this will be a much slower build, and will require packaging tools used for the build process.
+One last thing. This guide is for Mezey GNU/Linux ARM64 running on a Raspberry PI 4 computer, however, I will be building Mezey GNU/Linux on a AMD64 (x86\_64) system so we will be dealing with cross-compilation. I'm doing this because my build computer has an 2.4 GHz 8-Core Intel Core i9 processor and 32 GB of RAM, compared to the host computer which is using a Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz with only 8 GB of RAM. I will be creating a guide on how to build Mezey GNU/Linux using Mezey GNU/Linux (running on a Raspberry PI 4), though this will be a much slower build, and will require packaging tools used for the build process.
 
 [Back to top](#top)
 
@@ -67,7 +67,7 @@ Why Mezey GNU/Linux
 
 Mezey GNU/Linux may be for you if you are someone who really wants to understand how the Linux Kernel and the GNU tools that make up a Linux distribution works, or you like the complete flexibility of compiling everything you need to use with the absolute freedom in what goes into your Linux build.
 
-Mezey GNU/Linux does have its own package manager, but these are just packages I have built for my system. If you need software outside of that realm, you need to compile it and install it yourself. If that software has dependencies, you need to also compile and install them. If you need security updates, you need to join some mailing lists. More on the Mezeypkg file format and the Mezeypkg manager later.
+Mezey GNU/Linux does have its own package manager, but these are just packages I have built for my system. If you need software outside of that realm, you need to compile it and install it yourself. If that software has dependencies, you need to also compile and install them. If you need security updates, you need to join some mailing lists. More on the mezeypkg file format and the Mezey package manager later.
 
 [Back to top](#top)
 
@@ -76,7 +76,7 @@ Install guide
 
 ### Build Computer Dependencies
 
-**\>>> To follow along with this guide, you need to be running a version of Linux x86\_64 (amd64) before proceeding. I am using Ubuntu 18.04 but the flavor of Linux doesn't really matter as long as you meet the following requirements. If you are using a different package manager other than APT, some of the package names below will be named differently.**
+**\>>> To follow along with this guide, you need to be running a version of Linux x86\_64 (amd64) before proceeding. I am using Ubuntu 18.04 but the flavor of Linux doesn't really matter as long as you meet the following requirements below. If you are using a different package manager other than APT, some of the package names below will be named differently.**
 
 Required packages (Ubuntu 18.04):
 
