@@ -262,6 +262,10 @@ After this command completes, you will have headers installed in:
 
 This is a collection of binary tools, most notably, a linker and an assembler. Before we compile this tool, there is a couple of important things to note. We need to tell binutils we want to cross-compile. We also have to compile this tool before GCC and the GNU C Library as the configure script in both of these tools actually runs tests against the assembler and linker, so when these tests are ran, they need to run against our new assembler and linker.
 
+>**NOTE**
+>
+>  When dealing with cross-compiling, we have 3 properties we need to deal with; build, host and target.  Build is the architecture we are compiling the compiler on, host is the architecture the compiler will run on and target is the architecture the compiler will produce code for.  For binutils, we are building on x86_64-linux-gnu, which will run on x86_64-linux-gnu, but will produce code for aarch64-linux-gnu.
+
 With that said, we can get this tool here:
 
 ```
@@ -329,7 +333,7 @@ And a bunch of files in:
 
 The GNU compiler is a front-end for C and C++.
 
-Goal: Create a compiler that runs on x86\_64 architecture (host) but will produce aarch64 (build) code.
+Goal: Create a compiler that runs on x86\_64 architecture (host) but will produce aarch64 (build) code.  
 
 Before we proceed with compiling this tool, note we are building a degraded compiler. Why is this? The GCC compiler we are building will NOT have the Standard C Library (we haven't built it yet). However, this will be enough to compile the C Standard Library with. Once we build the C Standard Library, we will have a complete cross-compiler to build our tools (including a native compiler) that will allow us to enter a chroot environment (more on this later).
 
@@ -367,10 +371,6 @@ cd gcc-10.2.0-build
 ```
 
 Proceeding, we can now build GCC:
-
-> **Note**
-> 
-> Build is the architecture we are compiling the compiler on, host is the architecture the compiler will run on and target is the architecture the compiler will produce code for.
   
 > **Note**
 > 
