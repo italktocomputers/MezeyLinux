@@ -1,16 +1,10 @@
-## NOTE: This documentation is not complete!
+### NOTE: This documentation is not complete!
 
-🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64)
+# 🪐 Mezey GNU/Linux for Raspberry PI 4 (ARM64)
 
-==================
-
-#### \>>> For Raspberry PI 4 (ARM64)
-
-Author:                 Andrew Schools  
-Date of Publication:    Feb 27th, 2021  
-Date of Modification:   Sep 29th, 2022
-
-Mailing list: [https://groups.google.com/g/mezey-linux](https://groups.google.com/g/mezey-linux)
+| Author | Date of Publication | Date of Modification | Mailing list
+--- | --- | ---| ---|
+|Andrew Schools|Feb 27th, 2021 |Sep 29th, 2022|[📧](https://groups.google.com/g/mezey-linux)
 
 Index
 -----
@@ -76,7 +70,9 @@ Install guide
 
 ### Build Computer Dependencies
 
-**\>>> To follow along with this guide, you need to be running a version of Linux x86\_64 (amd64) before proceeding. I am using Ubuntu 18.04 but the flavor of Linux doesn't really matter as long as you meet the following requirements below. If you are using a different package manager other than APT, some of the package names below will be named differently.**
+> **Note** 
+> 
+> To follow along with this guide, you need to be running a version of Linux x86\_64 (amd64) before proceeding. I am using Ubuntu 18.04 but the flavor of Linux doesn't really matter as long as you meet the following requirements below. If you are using a different package manager other than APT, some of the package names below will be named differently.
 
 Required packages (Ubuntu 18.04):
 
@@ -148,7 +144,9 @@ If it's a SATA device and plugged into port 1, it will probably be given the nam
 
 We will be using the tool fdisk to partition our new hard drive. You can technically use a different tool to partition your hard drive as long as you are able to create a Master Boot Record and a partition.
 
-**\>>> Since we need to download, extract and build the Linux Kernel, as well as setup Mezey GNU/Linux, this disk should be at least 30 GB.**
+> **Note**
+> 
+> Since we need to download, extract and build the Linux Kernel, as well as setup Mezey GNU/Linux, this disk should be at least 30 GB.
 
 To start fdisk, run the command:
 
@@ -156,11 +154,17 @@ To start fdisk, run the command:
 
 Make sure you use the correct device name. If you have more than two devices, your device name may be /dev/sdc.
 
-**\>>> From now on, I will assume your device name for the Mezey disk is called sdb. So for any commands that use /dev/sdb, make sure to replace with your device name.**  
+> **Note**
+> 
+> From now on, I will assume your device name for the Mezey disk is called sdb. So for any commands that use /dev/sdb, make sure to replace with your device name. 
   
-**\>>> The following commands will remove any data on the Mezey device so make sure you have the correct device name!**  
+> **Warning**
+> 
+> The following commands will remove any data on the Mezey device so make sure you have the correct device name!
   
-**\>>> This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation. For more information on EFI, visit [https://en.wikipedia.org/wiki/Unified\_Extensible\_Firmware\_Interface](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface).**
+> **Note**
+> 
+> This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation. For more information on EFI, visit [https://en.wikipedia.org/wiki/Unified\_Extensible\_Firmware\_Interface](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface).
 
 We need to create our boot sector (a classic generic Master Boot Record). This is not a partition, but rather a section of the disk right before any of the partitions. This sector will hold our bootable code (more on this later) which can be up to 466 bytes, a partition table and a boot signature. To create our generic Master Boot Record, type the character **o**.
 
@@ -168,13 +172,17 @@ Now let's create a single partition by typing the character **n**. This will the
 
 The last command we will type is **w**, which will write the partition table to our disk and exit.
 
-**\>>> Some users or GNU/Linux distributions prefer to create extra partitions. For example, Ubuntu has a partition for / and for /boot. Feel free to partition your Mezey disk anyway you want.**
+> **Note**
+> 
+> Some users or GNU/Linux distributions prefer to create extra partitions. For example, Ubuntu has a partition for / and for /boot. Feel free to partition your Mezey disk anyway you want.
 
 Before we can mount this partition, we need to create an ext4 file system on it. This can be done by using the command:
 
 `sudo mkfs.ext4 /dev/sdb1`  
   
-**\>>> Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.**
+> **Warning**
+> 
+> Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.
 
 [Back to top](#top)
 
@@ -188,7 +196,9 @@ We will use this as our mount point for the new partition we just created above.
 
 `sudo mount /dev/sdb1 $MEZEY_DIR`  
   
-**\>>> For convenience, make sure the user you are logged in as has read and write permissions to the $MEZEY\_DIR directory. For example, if you are logged in as the default user, you can use the command below:**  
+> **Note**
+> 
+> For convenience, make sure the user you are logged in as has read and write permissions to the $MEZEY\_DIR directory. For example, if you are logged in as the default user, you can use the command below:
   
 `sudo chown 1000:1000 $MEZEY_DIR`
 
@@ -224,7 +234,9 @@ tar -xvf linux-5.11.tar.xz
 cd linux-5.11
 ```
   
-**\>>> I will NOT be discussing here how to verify the kernel signature. Review the documentation here for more information on how to do this: [https://www.kernel.org/category/signatures.html](https://www.kernel.org/category/signatures.html)**
+> **Note**
+> 
+> I will NOT be discussing here how to verify the kernel signature. Review the documentation here for more information on how to do this: [https://www.kernel.org/category/signatures.html](https://www.kernel.org/category/signatures.html)
 
 To generate the header files needed for the ARM64 architecture, run the command below:
 
@@ -356,9 +368,13 @@ cd gcc-10.2.0-build
 
 Proceeding, we can now build GCC:
 
-**\>>> Build is the architecture we are compiling the compiler on, host is the architecture the compiler will run on and target is the architecture the compiler will produce code for.**  
+> **Note**
+> 
+> Build is the architecture we are compiling the compiler on, host is the architecture the compiler will run on and target is the architecture the compiler will produce code for.
   
-**\>>> The configure option -with-newlib prevents the compiling of any code that requires the C Standard Library by telling the compiler that we will be using newlib instead, which is a lightweight C Standard Library for embedded systems. We won't be actually using newlib, but this is a way to compile GCC without the C Standard Library.**  
+> **Note**
+> 
+> The configure option -with-newlib prevents the compiling of any code that requires the C Standard Library by telling the compiler that we will be using newlib instead, which is a lightweight C Standard Library for embedded systems. We won't be actually using newlib, but this is a way to compile GCC without the C Standard Library.
   
 ```
 ../gcc-10.2.0/configure \     
@@ -404,7 +420,9 @@ And a bunch of other files in:
 
 *   $MEZEY\_DIR/lib/gcc/aarch64-linux-gnu/
 
-**\>>> As you can see in the files listed above, GCC is also providing the files ar and nm. This is not redudant. These are wrappers around the binaries provided by the binutils package. Since GCC supports plugins, this allows for dynamic loading a recognizer/analyser.**
+> **Note**
+> 
+> As you can see in the files listed above, GCC is also providing the files ar and nm. This is not redudant. These are wrappers around the binaries provided by the binutils package. Since GCC supports plugins, this allows for dynamic loading a recognizer/analyser.
 
 [Back to top](#top)
 
@@ -523,7 +541,9 @@ sudo lilo -C $MEZEY_DIR/etc/lilo.conf
 
 This command will add the LILO boot loader to the first sector of our Mezey disk, and also create a couple of configuration files in our boot directory.
 
-**\>>> Be carful, and make sure disk and boot point to your Mezey disk device name, or you may overwrite your current boot loader!**
+> **Warning**
+> 
+> Be carful, and make sure disk and boot point to your Mezey disk device name, or you may overwrite your current boot loader!
 
 [Back to top](#top)
 
@@ -539,7 +559,7 @@ So far, our boot directory should look like below:
 
 To confirm we have a working system, we are going to make a simple init system that will just print the text _Welcome to Mezey GNU/Linux!_ when the Linux Kernel boots. This will be simple, as we only need a few lines of code:
 
-```
+```c
 int main(int argc, char** args) {     
     printf("Hello from Mezey GNU/Linux!");     
     return 0;   
@@ -548,7 +568,7 @@ int main(int argc, char** args) {     
 
 Save this code to a file called _$MEZEY\_DIR/init.c_. To compile this code, we want to make sure we use the new C Library we just compiled:
 
-```
+```bash
 gcc -Xlinker -rpath=$MEZEY_DIR/usr/local/lib \     
     -Xlinker -I$MEZEY_DIR/usr/local/lib/ld-2.33.so init.c
 ```
