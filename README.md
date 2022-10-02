@@ -138,41 +138,19 @@ export MEZEY_TMP=$MEZEY_DIR/tmp
 
 ### Partition a new hard drive
 
+We need an extra disk so we can install Mezey GNU/Linux on it.  Since we need to download, extract and build the Linux Kernel, as well as setup Mezey GNU/Linux, this disk should be at least 30 GB.
+
 > **Note** 
 > 
 > If you want to use a disk image instead of a SATA disk, skip to this section: [Using a disk image](#using-a-disk-image)
 
 #### Using a SATA disk
 
-We need an extra disk so we can install Mezey GNU/Linux on it. Make sure this disk is attached, and has been found. Run the command below to make sure this disk is listed, and what device name it was given.
+Make sure your SATA disk is attached, and has been found. Run the command below to make sure this disk is listed, and what device name it was given.
 
 `lsblk`
 
 If it's a SATA device and plugged into port 1, it will probably be given the name _sdb_.
-
-We will be using the tool fdisk to partition our new hard drive. You can technically use a different tool to partition your hard drive as long as you are able to create a Master Boot Record and a partition.
-
-> **Note**
-> 
-> Since we need to download, extract and build the Linux Kernel, as well as setup Mezey GNU/Linux, this disk should be at least 30 GB.
-
-To start fdisk, run the command:
-
-`sudo fdisk /dev/sdb`
-
-Make sure you use the correct device name. If you have more than two devices, your device name may be /dev/sdc.
-
-> **Note**
-> 
-> From now on, I will assume your device name for the Mezey disk is called sdb. So for any commands that use /dev/sdb, make sure to replace with your device name. 
-  
-> **Warning**
-> 
-> The following commands will remove any data on the Mezey device so make sure you have the correct device name!
-  
-> **Note**
-> 
-> This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation. For more information on EFI, visit [https://en.wikipedia.org/wiki/Unified\_Extensible\_Firmware\_Interface](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface).
 
 #### Using a disk image
 > **Note** 
@@ -191,9 +169,23 @@ Now mount it as a loop device:
 sudo losetup -fP ~/mezey.img
 ```
 
-This will mount your disk to the first available loop device.  To determine what loop device is being used for your disk image, you can run the command `losetup`.
+This will mount your disk to the first available loop device.  To determine what loop device is being used for your disk image, you can run the command `losetup`.  Your disk name will look something like `/dev/loop0` and the partition we created can be accessed at `/dev/loop0p1`.
 
 #### Creating a boot sector
+
+We will be using the tool fdisk to partition our new hard drive. You can technically use a different tool to partition your hard drive as long as you are able to create a Master Boot Record and a partition.
+
+> **Warning**
+> 
+> The following commands will remove any data on the Mezey device so make sure you have the correct device name!   If you have a SATA disk, your device name may be /dev/sdb.  If you are using a loop device, your device name may be /dev/loop0.  May attention to the device name you give below.  Moving forward, I'm going to assume your Mezey disk is located at /dev/sdb.
+  
+> **Note**
+> 
+> This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation. For more information on EFI, visit [https://en.wikipedia.org/wiki/Unified\_Extensible\_Firmware\_Interface](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface).
+
+To start fdisk, run the command:
+
+`sudo fdisk /dev/sdb`
 
 We need to create our boot sector (a classic generic Master Boot Record). This is not a partition, but rather a section of the disk right before any of the partitions. This sector will hold our bootable code (more on this later) which can be up to 466 bytes, a partition table and a boot signature. To create our generic Master Boot Record, type the character **o**.
 
