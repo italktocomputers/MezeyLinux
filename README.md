@@ -138,6 +138,12 @@ export MEZEY_TMP=$MEZEY_DIR/tmp
 
 ### Partition a new hard drive
 
+> **Note** 
+> 
+> If you want to use a disk image instead of a SATA disk, skip to this section: [Using a disk image](#using-a-disk-image)
+
+#### Using a SATA disk
+
 We need an extra disk so we can install Mezey GNU/Linux on it. Make sure this disk is attached, and has been found. Run the command below to make sure this disk is listed, and what device name it was given.
 
 `lsblk`
@@ -167,6 +173,27 @@ Make sure you use the correct device name. If you have more than two devices, yo
 > **Note**
 > 
 > This documentation does NOT discuss using EFI, although there is nothing preventing you from using this specification, I just won't be using it to setup Mezey GNU/Linux in this documentation. For more information on EFI, visit [https://en.wikipedia.org/wiki/Unified\_Extensible\_Firmware\_Interface](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface).
+
+#### Using a disk image
+> **Note** 
+>
+> Skip to [Creating a boot sector](#creating-a-boot-sector) if you are using a SATA disk
+
+If you don't have an external disk attached to your computer, you can create a disk image.  First, create a 30 GB disk image in your home directory called mezey.img.
+
+```
+sudo dd if=/dev/zero of=~/mezey.img bs=1000M count=30
+```
+
+Now mount it as a loop device:
+
+```
+sudo losetup -fP ~/mezey.img
+```
+
+This will mount your disk to the first available loop device.  To determine what loop device is being used for your disk image, you can run the command `losetup`.
+
+#### Creating a boot sector
 
 We need to create our boot sector (a classic generic Master Boot Record). This is not a partition, but rather a section of the disk right before any of the partitions. This sector will hold our bootable code (more on this later) which can be up to 466 bytes, a partition table and a boot signature. To create our generic Master Boot Record, type the character **o**.
 
