@@ -203,7 +203,7 @@ Before we can mount this partition, we need to create an ext4 file system on it.
   
 > **Warning**
 > 
-> Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.  To be sure the naming convention of the partitions device, you can use `lsblk`.  For example, if you are using a loop device, your output may look like: 
+> Make sure you create a filesystem on our newly created partition or you will destroy our boot sector.  To be sure of the naming convention of the device's partition, we can use the command `lsblk`.  For example, if we're using a loop device, our output may look like: 
 
 ```
 andrew@legion:~$ lsblk /dev/loop3
