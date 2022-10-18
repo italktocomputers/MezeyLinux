@@ -203,7 +203,16 @@ Before we can mount this partition, we need to create an ext4 file system on it.
   
 > **Warning**
 > 
-> Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.
+> Make sure you do NOT create a filesystem on /dev/sdb as this will destroy our boot sector.  To be sure the naming convention of the partitions device, you can use `lsblk`.  For example, if you are using a loop device, your output may look like: 
+
+```
+andrew@legion:~$ lsblk /dev/loop3
+NAME      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+loop3       7:3    0 29.3G  0 loop
+└─loop3p1 259:0    0 29.3G  0 loop
+```
+
+In the output above, we want to create our filesystem here: `loop3p1`, so the command is `sudo mkfs.ext4 /dev/loop3p1`.
 
 [Back to top](#top)
 
